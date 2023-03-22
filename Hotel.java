@@ -1,13 +1,14 @@
 public class Hotel {
-    String name;
-    int value;
-    int ownerId;
-    int stars;
+    private String name;
+    private int value;
+    //int ownerId;
+    private Player owner;
+    private int stars;
 
-    public Hotel(String name, int value, int ownerId, int stars){
+    public Hotel(String name, int value, Player owner, int stars){
         this.name = name;
         this.value = value;
-        this.ownerId = ownerId;
+        this.owner = owner;
         this.stars = stars;
     }
 
@@ -19,8 +20,8 @@ public class Hotel {
         return value;
     }
 
-    public int getOwnerId(){
-        return ownerId;
+    public Player getOwner(){
+        return owner;
     }
 
     public int getStars(){
@@ -35,16 +36,25 @@ public class Hotel {
         this.value = value;
     }
 
-    public void setOwnerId(int ownerId){
-        this.ownerId = ownerId;
+    public void setOwner(Player owner){
+        this.owner = owner;
     }
 
     public void setStars(int stars){
         this.stars = stars;
     }
 
+    public void increaseStars(){
+        stars++;
+    }
+
+    public void setGroup(){
+        //set the group of the hotel
+        
+    }
+
     public String toString(){
-        return "Hotel: " + name + " Value: " + value + " Owner: " + ownerId + " Stars: " + stars;
+        return "Hotel: " + name + " Value: " + value + " Owner: " + owner + " Stars: " + stars;
     }
 
     
