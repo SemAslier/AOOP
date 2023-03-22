@@ -1,6 +1,6 @@
 public class Player {
-    int position;
-    int money;
+    private int position;
+    private int money;
 
     public int getPosition(){
         return position;
