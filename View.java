@@ -1,9 +1,13 @@
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class View implements Observer {
     public View() {
         // create the view
+        
 
         
 
