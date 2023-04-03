@@ -27,6 +27,16 @@ public class View implements Observer {
 
     }
 
+    public void update(){
+        // update the view
+        
+
+        
+
+    }
+
+
+
     @Override
     public void update(java.util.Observable o, Object arg) {
         // TODO 

@@ -4,12 +4,13 @@ public class Hotel {
     //int ownerId;
     private Player owner;
     private int stars;
+    private String group;
 
-    public Hotel(String name, int value, Player owner, int stars){
+    public Hotel(String name, int value, int stars, String group){
         this.name = name;
         this.value = value;
-        this.owner = owner;
         this.stars = stars;
+        this.group = group;
     }
 
     public String getName(){
@@ -48,13 +49,21 @@ public class Hotel {
         stars++;
     }
 
+
+    public String getGroup(){
+        //get the group of the hotel
+        return group;
+    }
+
     public void setGroup(){
         //set the group of the hotel
+        this.group = group;
+        
         
     }
 
     public String toString(){
-        return "Hotel: " + name + " Value: " + value + " Owner: " + owner + " Stars: " + stars;
+        return "Hotel: " + name + " Value: " + value + " Owner: " + owner + " Stars: " + stars + " Group: " + group;
     }
 
     
