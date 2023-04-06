@@ -59,8 +59,16 @@ public class Model extends Observable {
         // Init game standard
         this.setModeNormal();
         this.turn = 0;
-        this.players = players;
+
         // init players
+        this.players = new ArrayList<Player>();
+        Player alice = new Player(100);
+        Player bob = new Player(100);
+        alice.setName("alice");
+        bob.setName("bob");
+        this.players.add(alice);
+        this.players.add(bob);
+
         // init hotels
         this.spaces = new ArrayList<Space>();
         this.hotels = new ArrayList<Hotel>();
@@ -80,7 +88,7 @@ public class Model extends Observable {
         }
     }
     
-
+    // mode functions
     public Mode getMode(){
         return mode;
     }
@@ -105,9 +113,7 @@ public class Model extends Observable {
         return turn;
     }
 
-    public void setTurn(int turn){
-        this.turn = turn;
-    }
+    
 
 
     
@@ -117,12 +123,18 @@ public class Model extends Observable {
         return spaces;
     }
 
+
+    // player functions
     public ArrayList<Player> getPlayers(){
         return players;
     }
 
     public void setPlayers(ArrayList<Player> players){
         this.players = players;
+    }
+
+    public Player getCurrentPlayer(){
+        return this.players.get(this.turn % 2);
     }
 
 
@@ -134,6 +146,14 @@ public class Model extends Observable {
         this.hotels = hotels;
     }
 	
+    public void setTurn(int turn){
+        this.turn = turn;
+    }
+
+    public void startNextTurn(){
+        this.turn ++;
+    }
+
 
     public int rollDice(){
         // roll the 12 sided dice
@@ -143,13 +163,14 @@ public class Model extends Observable {
 
     public void movePlayer(){
         // move the player
+        Player currentPlayer = this.getCurrentPlayer();
         int dice = rollDice();
-        int playerPosition = players.get(turn).getPosition();
+        int playerPosition = currentPlayer.getPosition();
         int newPosition = playerPosition + dice;
         if(newPosition > 39){
             newPosition = newPosition - 40;
         }
-        players.get(turn).setPosition(newPosition);
+        currentPlayer.setPosition(newPosition);
         if(spaces.get(newPosition).getHotel() != null){
             calculateRent();
         }
@@ -213,29 +234,46 @@ public class Model extends Observable {
     }
 
     public int calculateRent(){
+        /*
+         * If the player lands on a hotel owned by the other player, an overnight fee should be deducted from the 
+         * first player (guest) and given to the second player (owner). The overnight fee for a hotel is 10% of the 
+         * purchase price multiplied by the square of the star-rating. However, the fee is doubled if the owner owns 
+         * both of the other two hotels in the letter group eg A3 and A2 as well as A1 and is halved if the guest 
+         * owns either or both of the other two hotels in the letter group
+         * 
+         * - Check the owner
+         * - Get purchase price -> 0.1 * purchase price
+         * - Get star rating -> stars^2
+         * - Check if the owner own all hotels -> double the rent
+         * - Check if the guest owns any hotels in the same group -> halve the rent
+         */
+
         // calculate the rent
-        int playerPosition = players.get(turn).getPosition();
-        int hotelStars = spaces.get(playerPosition).getHotel().getStars();
-        int hotelValue = spaces.get(playerPosition).getHotel().getValue();
+        Player currentPlayer = this.getCurrentPlayer(); 
+        int playerPosition = currentPlayer.getPosition();
+        Hotel hotel = spaces.get(playerPosition).getHotel();
+        int hotelStars = hotel.getStars();
+        int hotelValue = hotel.getValue();
+        String hotelGroup = hotel.getGroup();
         int baseRent = (int) (0.1 * hotelValue * Math.pow(hotelStars, 2));
 
+        //check the owner
+        if(hotel.getOwner() == currentPlayer){
+            return 0;
 
-        // if the owner owns the group, double the rent
-        // if (Hotel.getOwner().ownsGroup(hotel)) {
-        //     baseRent *= 2;
-        // }
+        }
 
+        // check if the owner owns all hotels
+        if(false){
+            return baseRent * 2;
+        } 
 
-        // if the player owns a hotel from the group, half the rent
-        // if (Player.ownsGroup(hotel)) {
-        //     baseRent /= 2;
-        // }
+        // check if the guest owns any hotel in the group
+        if(false){
+            return baseRent / 2;
+        }
 
         return baseRent;
-
-
-
-
 
     }
 

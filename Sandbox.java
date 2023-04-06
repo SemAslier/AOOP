@@ -30,5 +30,29 @@ public class Sandbox {
         // System.out.println("amount of spaces on the board: " + mod.getSpaces());
         
         System.out.print(mod);
+
+        System.out.println("Test next turn mechanics");
+        System.out.println(mod.getCurrentPlayer());
+        mod.startNextTurn();
+        System.out.println(mod.getCurrentPlayer());
+        
+        mod.startNextTurn();
+        System.out.println(mod.getCurrentPlayer());
+
+        // rent tests:
+
+        // - test 1 no one owns the hotel
+
+        // - test 2 guest owns hotel
+
+        // - test 3 opponent owns only this hotel in group
+
+        // - test 4 opponent own all hotels in groupt
+
+        // - test 5 opponent and guest both own hotels in group
+
+
+
+
     }
 }
