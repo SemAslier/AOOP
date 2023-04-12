@@ -42,7 +42,7 @@ public class Player {
     }
 
     public String toString(){
-        return "Name: " + name + "Position: " + position + " Money: " + money;
+        return "Name: " + name + " Position: " + position + " Money: " + money;
     }
 
     
