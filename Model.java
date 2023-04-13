@@ -265,12 +265,12 @@ public class Model extends Observable {
 
         //check the owner
         if(hotel.getOwner() == null){
-            System.out.println("owner is null");
+            // System.out.println("owner is null");
             return 0;
         }
 
         if(hotel.getOwner() == guest){
-            System.out.println("owner is guest");
+            // System.out.println("owner is guest");
             return 0;
 
         }
@@ -288,7 +288,7 @@ public class Model extends Observable {
 
 
         if(hotel.getOwner() == owner && allGroupHotelsOwned){
-            System.out.println("owner has all hotels in group");
+            // System.out.println("owner has all hotels in group");
             return baseRent * 2;
         }
 
@@ -301,7 +301,7 @@ public class Model extends Observable {
             }
         }
         if(hasOtherGroupHotelOwned){
-            System.out.println("guest own hotel in group");
+            // System.out.println("guest own hotel in group");
             return baseRent / 2;
         }
 
