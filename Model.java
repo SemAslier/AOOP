@@ -305,32 +305,34 @@ public class Model extends Observable {
             return baseRent / 2;
         }
 
-        System.out.println("owner owns only this hotel");
+        // System.out.println("owner owns only this hotel");
         return baseRent;
     }
 
 
     public void payRent(){
         // pay the rent
-        Player currentPlayer = this.getCurrentPlayer();
+        Player guest = this.getCurrentPlayer();
         Player owner = this.getPassivePlayer();
-        int playerPosition = currentPlayer.getPosition();
+        int playerPosition = guest.getPosition();
         int rent = calculateRent();
-        int playerMoney = currentPlayer.getMoney();
+        int playerMoney = guest.getMoney();
         int ownerMoney = owner.getMoney();
 
+        System.out.println("Rent: " + rent);
+        System.out.println("Guest money before: " + playerMoney);
 
         if(rent == 0){
             return;
         }
 
         if(playerMoney >= rent){
-            currentPlayer.setMoney(playerMoney - rent);
+            guest.setMoney(playerMoney - rent);
             owner.setMoney(ownerMoney + rent);
         }else{
             endGame();
         }
-
+        System.out.println("Guest money after: " + guest.getMoney());
     }
 
     public void nextTurn(){

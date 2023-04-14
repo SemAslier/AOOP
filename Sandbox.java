@@ -42,7 +42,7 @@ public class Sandbox {
 
         // rent tests (Testing calculateRent() method and star ratings based on calculaterent):
         mod = new Model();
-        System.out.println("Test rent mechanics");
+        System.out.println("Test rent calculation mechanics");
 
         // - test 1 no one owns the hotel
         System.out.println(" Test 1: No one owns the hotel");
@@ -74,7 +74,7 @@ public class Sandbox {
 
 
         // - test 3 opponent owns only this hotel in group
-        System.out.println(" Test 3: opponent owns only this hotel in group");
+        System.out.println(" Test 3: opponent owns only this hotel in group, with 5 stars");
         Player testGuest3 = mod.getCurrentPlayer();
         Player testOwner3 = mod.getPassivePlayer();
 
@@ -89,7 +89,7 @@ public class Sandbox {
         System.out.println("Rent is: " + mod.calculateRent());
 
         // - test 4 opponent own all hotels in group
-        System.out.println(" Test 4: opponent owns all hotels in group");
+        System.out.println(" Test 4: opponent owns all hotels in group with 1 star");
         Player testGuest4 = mod.getCurrentPlayer();
         Player testOwner4 = mod.getPassivePlayer();
 
@@ -112,7 +112,7 @@ public class Sandbox {
 
 
         // - test 5 opponent and guest both own hotels in group
-        System.out.println(" Test 5: opponent and guest both own hotels in group");
+        System.out.println(" Test 5: opponent and guest both own hotels in group opponent hotel has 3 stars");
         Player testGuest5 = mod.getCurrentPlayer();
         Player testOwner5 = mod.getPassivePlayer();
 
@@ -133,7 +133,24 @@ public class Sandbox {
         System.out.println("rent should be 144");
         System.out.println("Rent is: " + mod.calculateRent());
 
+        // pay rent test
+        mod = new Model();
+        System.out.println("Test pay rent mechanics");
 
+        Player testGuest6 = mod.getCurrentPlayer();
+        Player testOwner6 = mod.getPassivePlayer();
+
+        Hotel testHotel10 = mod.getHotels().get(1);
+
+        testHotel10.setOwner(testOwner6);
+        testHotel10.setStars(1);
+
+        testGuest6.setPosition(3);
+        System.out.println(mod.calculateRent());
+
+        System.out.println("Guest has " + testGuest6.getMoney() + " money");
+        mod.payRent();
+        System.out.println("Guest has " + testGuest6.getMoney() + " money");
 
 
     }
