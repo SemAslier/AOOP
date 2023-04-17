@@ -287,7 +287,7 @@ public class Model extends Observable {
         }
 
 
-        if(hotel.getOwner() == owner && allGroupHotelsOwned){
+        if(allGroupHotelsOwned){
             // System.out.println("owner has all hotels in group");
             return baseRent * 2;
         }
@@ -295,7 +295,7 @@ public class Model extends Observable {
         // check if the guest owns any hotel in the group
         boolean hasOtherGroupHotelOwned = false;
         for (Hotel h : hotels) {
-        if (h.getGroup().equals(hotelGroup) && h.getOwner() == guest && h != hotel) {
+        if (h.getGroup().equals(hotelGroup) && h.getOwner() == guest &&  h != hotel) {
             hasOtherGroupHotelOwned = true;
             break;
             }
