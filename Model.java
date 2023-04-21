@@ -1,6 +1,7 @@
 import java.util.Observable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Model extends Observable {
     public enum Mode{
@@ -52,19 +53,22 @@ public class Model extends Observable {
     private Mode mode;
     private int dice;
     private int rent;
+    private Random randomgenerator;
 
 
     
 
     public Model(){
+        this.randomgenerator = new Random(0);
+
         // Init game standard
         this.setModeNormal();
         this.turn = 0;
 
         // init players
         this.players = new ArrayList<Player>();
-        Player alice = new Player(100);
-        Player bob = new Player(100);
+        Player alice = new Player(2000);
+        Player bob = new Player(2000);
         alice.setName("alice");
         bob.setName("bob");
         this.players.add(alice);
@@ -73,7 +77,7 @@ public class Model extends Observable {
         // init hotels
         this.spaces = new ArrayList<Space>();
         this.hotels = new ArrayList<Hotel>();
-        int hi = 0;
+        int hi = 0; // hotelindex
         for (int i = 0; i < 40; i++){
             Space space = new Space();
 
@@ -100,6 +104,7 @@ public class Model extends Observable {
 
     public void setModeNormal(){
         this.mode = Mode.NORMAL;
+        notifyObservers();
     }
 
     public void setModeCheat(){
@@ -149,6 +154,8 @@ public class Model extends Observable {
 	
     public void setTurn(int turn){
         this.turn = turn;
+        setChanged();
+        notifyObservers(turn);
     }
 
     public void startNextTurn(){
@@ -158,7 +165,7 @@ public class Model extends Observable {
 
     public int rollDice(){
         // roll the 12 sided dice
-        dice = (int)(Math.random() * 12) + 1;
+        dice = (int)(this.randomgenerator.nextDouble() * 12) + 1;
         return dice;
     }
 
@@ -172,9 +179,9 @@ public class Model extends Observable {
             newPosition = newPosition - 40;
         }
         currentPlayer.setPosition(newPosition);
-        if(spaces.get(newPosition).getHotel() != null){
-            calculateRent();
-        }
+        // if(spaces.get(newPosition).getHotel() != null){
+        //     calculateRent();
+        // }
         
 
     }
@@ -190,10 +197,6 @@ public class Model extends Observable {
             spaces.get(playerPosition).getHotel().setOwner(players.get(turn));
 
         }
-
-
-        
-        
 
     }
 
@@ -353,6 +356,10 @@ public class Model extends Observable {
             setModeGameOver();
         }
 
+    }
+
+    public boolean isRunning(){
+        return this.getModeName() == "gameover";
     }
 
     public void endGame(){

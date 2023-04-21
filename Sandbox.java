@@ -1,12 +1,22 @@
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Observer;
 
-public class Sandbox {
+public class Sandbox implements Observer {
     public static void main(String[] args) {
-        tests();
+      
+
+        Sandbox sb = new Sandbox();
+        sb.tests();
         
     }
 
-    private static void tests(){
+    @Override
+    public void update(java.util.Observable o, Object arg) {
+        // TODO 
+    }
+
+    private void tests(){
         // init gamestate
         // build the model
         // 
@@ -151,6 +161,35 @@ public class Sandbox {
         System.out.println("Guest has " + testGuest6.getMoney() + " money");
         mod.payRent();
         System.out.println("Guest has " + testGuest6.getMoney() + " money");
+
+        // Test 20 rolls
+        mod = new Model();
+        String rolls = "";
+        for(i = 0; i< 20; i++ ){
+            rolls += ", " + mod.rollDice(); 
+        }
+        System.out.println(rolls);
+
+        mod = new Model();
+        rolls = "";
+        for(i = 0; i< 20; i++ ){
+            rolls += ", " + mod.rollDice(); 
+        }
+        System.out.println(rolls);
+
+        // Test game loop
+
+        mod = new Model();
+        mod.addObserver(this);
+        System.out.println("Test game loop");
+        while(mod.isRunning()){
+            mod.movePlayer();
+
+        }
+
+
+
+
 
 
     }
