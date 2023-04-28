@@ -22,7 +22,8 @@ public class Sandbox implements Observer {
         // 
 
         System.out.println("Gamestate Tests");
-        Model mod = new Model();
+        long seed = 0;
+        Model mod = new Model(seed);
 
         // dice test
         System.out.println("Dice test");
@@ -51,7 +52,8 @@ public class Sandbox implements Observer {
         System.out.println(mod.getCurrentPlayer() + " is the current player ");
 
         // rent tests (Testing calculateRent() method and star ratings based on calculaterent):
-        mod = new Model();
+        
+        mod = new Model(seed);
         System.out.println("Test rent calculation mechanics");
 
         // - test 1 no one owns the hotel
@@ -144,7 +146,7 @@ public class Sandbox implements Observer {
         System.out.println("Rent is: " + mod.calculateRent());
 
         // pay rent test
-        mod = new Model();
+        mod = new Model(seed);
         System.out.println("Test pay rent mechanics");
 
         Player testGuest6 = mod.getCurrentPlayer();
@@ -163,34 +165,68 @@ public class Sandbox implements Observer {
         System.out.println("Guest has " + testGuest6.getMoney() + " money");
 
         // Test 20 rolls
-        mod = new Model();
+        mod = new Model(seed);
         String rolls = "";
         for(i = 0; i< 20; i++ ){
             rolls += ", " + mod.rollDice(); 
         }
         System.out.println(rolls);
 
-        mod = new Model();
+        mod = new Model(seed);
         rolls = "";
         for(i = 0; i< 20; i++ ){
             rolls += ", " + mod.rollDice(); 
         }
         System.out.println(rolls);
 
-        // Test game loop
-
-        mod = new Model();
+        // Test game loop simple, set decisions to always buy/upgrade
+        for(i = 0; i< 3; i++ ){
+        mod = new Model(i);
         mod.addObserver(this);
         System.out.println("Test game loop");
-        while(mod.isRunning()){
+        while(mod.isRunning() == false){
+            System.out.println("Turn " + mod.getTurn() + " Player " + mod.getCurrentPlayer() + " is the current player ");
             mod.movePlayer();
+            Player currentPlayer = mod.getCurrentPlayer();
+            int currentSpace = currentPlayer.getPosition();
+            Hotel currentHotel = mod.getSpace(currentSpace).getHotel();
+            Space hasHotel = mod.getSpace(currentSpace);
+            
+           
+            if (currentHotel == null) {
+                System.out.println("Player " + currentPlayer + " landed on " + hasHotel);
+                mod.startNextTurn();
+            } 
 
+            else if (currentHotel != null && currentHotel.getOwner() == null) {
+                mod.buyHotel();
+                
+                mod.startNextTurn();
+                
+            } else if(currentHotel != null && currentHotel.getOwner() == currentPlayer) {
+                mod.upgradeHotel();
+                //System.out.println("Player " + currentPlayer + " upgraded " + currentHotel);
+                mod.startNextTurn();
+                
+                
+            } else if(currentHotel != null && currentHotel.getOwner() != currentPlayer) {
+                mod.payRent();
+                
+                mod.startNextTurn();
+                
+            } else{
+                 mod.startNextTurn();
+            }    
+                }
+            }
+            
         }
-
-
-
-
-
-
     }
-}
+
+
+
+
+
+
+    
+

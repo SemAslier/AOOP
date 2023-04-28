@@ -58,8 +58,8 @@ public class Model extends Observable {
 
     
 
-    public Model(){
-        this.randomgenerator = new Random(0);
+    public Model(long seed){
+        this.randomgenerator = new Random(seed);
 
         // Init game standard
         this.setModeNormal();
@@ -124,6 +124,10 @@ public class Model extends Observable {
         return spaces;
     }
 
+    public Space getSpace(int position){
+        return spaces.get(position);
+    }
+
 
     // player functions
     public ArrayList<Player> getPlayers(){
@@ -140,7 +144,7 @@ public class Model extends Observable {
 
     public Player getPassivePlayer(){
         return this.players.get((this.turn + 1) % 2);
-    }
+    }  
 
 
 
@@ -179,6 +183,7 @@ public class Model extends Observable {
             newPosition = newPosition - 40;
         }
         currentPlayer.setPosition(newPosition);
+        System.out.println("Player " + currentPlayer.getName() + " rolled a " + dice + " and moved to " + newPosition);
         // if(spaces.get(newPosition).getHotel() != null){
         //     calculateRent();
         // }
@@ -189,12 +194,14 @@ public class Model extends Observable {
     public void buyHotel(){
         // buy the hotel
         Player currentPlayer = this.getCurrentPlayer();
-        int playerPosition = players.get(turn).getPosition();
+        int playerPosition = currentPlayer.getPosition();
         int hotelValue = spaces.get(playerPosition).getHotel().getValue();
         int playerMoney = currentPlayer.getMoney();
+        Hotel hotel = spaces.get(playerPosition).getHotel();
         if(playerMoney >= hotelValue){
-            players.get(turn).setMoney(playerMoney - hotelValue);
-            spaces.get(playerPosition).getHotel().setOwner(players.get(turn));
+            currentPlayer.setMoney(playerMoney - hotelValue);
+            hotel.setOwner(currentPlayer);
+            System.out.println("Player " + currentPlayer + " bought " + hotel);
 
         }
 
@@ -210,7 +217,7 @@ public class Model extends Observable {
 
 
         Player currentPlayer = this.getCurrentPlayer();
-        int playerPosition = players.get(turn).getPosition();
+        int playerPosition = currentPlayer.getPosition();
         int hotelStars = spaces.get(playerPosition).getHotel().getStars();
         int hotelValue = spaces.get(playerPosition).getHotel().getValue();
         int playerMoney = currentPlayer.getMoney();
@@ -227,7 +234,7 @@ public class Model extends Observable {
         }
 
         if(playerMoney >= (0.5 * hotelValue) && hotelStars < 5){
-            players.get(turn).setMoney(playerMoney - (int)(0.5 * hotelValue));
+            currentPlayer.setMoney(playerMoney - (int)(0.5 * hotelValue));
             spaces.get(playerPosition).getHotel().setStars(hotelStars + 1);
             System.out.println("Hotel " + hotelName + " has been upgraded to " + hotelStars + " stars.");
         }
@@ -332,10 +339,11 @@ public class Model extends Observable {
         if(playerMoney >= rent){
             guest.setMoney(playerMoney - rent);
             owner.setMoney(ownerMoney + rent);
+            System.out.println("Player " + guest + " paid rent to " + owner);
         }else{
             endGame();
         }
-        System.out.println("Guest money after: " + guest.getMoney());
+        
     }
 
     public void nextTurn(){
@@ -360,13 +368,20 @@ public class Model extends Observable {
 
     public boolean isRunning(){
         return this.getModeName() == "gameover";
+
     }
 
     public void endGame(){
-        // end the game and display winner
+        // end the game and display winner'
+        Player winner = this.getPassivePlayer();
         System.out.println("Game Over");
-        System.out.println("The winner is " + players.get(turn).getName());
+        System.out.println("The winner is " + winner.getName());
         setModeGameOver();
+        //System.exit(0);
+        //end program
+
+
+        
     }
 
     
