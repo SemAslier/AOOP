@@ -111,6 +111,10 @@ public class Model extends Observable {
         this.mode = Mode.CHEAT;
     }
 
+    public boolean getModeCheat(){
+        return this.mode == Mode.CHEAT;
+    }
+
     public void setModeGameOver(){
         this.mode = Mode.GAMEOVER;
     }
@@ -173,6 +177,10 @@ public class Model extends Observable {
         return dice;
     }
 
+    public double getRandomDouble(){
+        return this.randomgenerator.nextDouble();
+    }
+
     public void movePlayer(){
         // move the player
         Player currentPlayer = this.getCurrentPlayer();
@@ -223,6 +231,7 @@ public class Model extends Observable {
         int playerMoney = currentPlayer.getMoney();
         String hotelName = spaces.get(playerPosition).getHotel().getName();
 
+
         if(hotelStars >= 5){
             System.out.println("This hotel has already reached the maximum star rating.");
             return;
@@ -236,7 +245,10 @@ public class Model extends Observable {
         if(playerMoney >= (0.5 * hotelValue) && hotelStars < 5){
             currentPlayer.setMoney(playerMoney - (int)(0.5 * hotelValue));
             spaces.get(playerPosition).getHotel().setStars(hotelStars + 1);
-            System.out.println("Hotel " + hotelName + " has been upgraded to " + hotelStars + " stars.");
+            int newStars = hotelStars + 1;
+            
+            System.out.println("Hotel " + hotelName + " has been upgraded to " + newStars + " stars.");
+            System.out.println("Player " + currentPlayer.getName() + " now has " + currentPlayer.getMoney() + " pounds.");
         }
 
 

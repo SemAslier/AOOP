@@ -63,7 +63,7 @@ public class Hotel {
     }
 
     public String toString(){
-        return "Hotel: " + name + " Value: " + value + " Owner: " + owner + " Stars: " + stars + " Group: " + group;
+        return name + " Value: " + value + " Owner: " + owner + " Stars: " + stars + " Group: " + group;
     }
 
     

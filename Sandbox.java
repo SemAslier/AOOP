@@ -180,7 +180,7 @@ public class Sandbox implements Observer {
         System.out.println(rolls);
 
         // Test game loop simple, set decisions to always buy/upgrade
-        for(i = 0; i< 3; i++ ){
+        for(i = 0; i< 1; i++ ){
         mod = new Model(i);
         mod.addObserver(this);
         System.out.println("Test game loop");
@@ -192,6 +192,7 @@ public class Sandbox implements Observer {
             Hotel currentHotel = mod.getSpace(currentSpace).getHotel();
             Space hasHotel = mod.getSpace(currentSpace);
             
+            
            
             if (currentHotel == null) {
                 System.out.println("Player " + currentPlayer + " landed on " + hasHotel);
@@ -199,14 +200,28 @@ public class Sandbox implements Observer {
             } 
 
             else if (currentHotel != null && currentHotel.getOwner() == null) {
-                mod.buyHotel();
-                
-                mod.startNextTurn();
+                System.out.println("Player " + currentPlayer + " landed on " + currentHotel);
+                if (mod.getRandomDouble() >= 0.3){
+                    mod.buyHotel();
+                    if (mod.getRandomDouble() >= 0.7){
+                        mod.upgradeHotel();
+                        mod.startNextTurn();
+                    }else{
+                        mod.startNextTurn();
+                    }
+
+                } else{
+                    mod.startNextTurn();
+                }
                 
             } else if(currentHotel != null && currentHotel.getOwner() == currentPlayer) {
+                if(mod.getRandomDouble() >= 0.3){
                 mod.upgradeHotel();
                 //System.out.println("Player " + currentPlayer + " upgraded " + currentHotel);
                 mod.startNextTurn();
+                } else{
+                    mod.startNextTurn();
+                }
                 
                 
             } else if(currentHotel != null && currentHotel.getOwner() != currentPlayer) {
