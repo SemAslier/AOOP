@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
+
+import org.junit.Test;
+
 import java.util.Observer;
 
 public class Sandbox implements Observer {
@@ -25,6 +28,8 @@ public class Sandbox implements Observer {
         long seed = 0;
         Model mod = new Model(seed);
 
+
+        
         // dice test
         System.out.println("Dice test");
         
@@ -38,6 +43,7 @@ public class Sandbox implements Observer {
 
         }
         System.out.println("lowest and highest rolls 100 throws: " + lowest +" " + highest);
+    
 
         // System.out.println("amount of spaces on the board: " + mod.getSpaces());
         
@@ -179,7 +185,7 @@ public class Sandbox implements Observer {
         }
         System.out.println(rolls);
 
-        // Test game loop simple, set decisions to always buy/upgrade
+        // Test game loop simple, 
         for(i = 0; i< 1; i++ ){
         mod = new Model(i);
         mod.addObserver(this);

@@ -29,6 +29,11 @@ public class Player {
         position = p;
     }
 
+    public void setThrow(int t){
+        assert t >= 0 && t <= 12;
+        position = position + t;
+    }
+
     public void setMoney(int m){
         money = m;
     }

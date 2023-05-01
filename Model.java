@@ -132,6 +132,18 @@ public class Model extends Observable {
         return spaces.get(position);
     }
 
+    public static String[] getHotelNames(){
+        return hotelNames;
+    }
+
+    public static int[] getHotelValues(){
+        return hotelValues;
+    }
+
+    public static String[] getHotelGroup(){
+        return hotelGroup;
+    }
+
 
     // player functions
     public ArrayList<Player> getPlayers(){
@@ -149,6 +161,11 @@ public class Model extends Observable {
     public Player getPassivePlayer(){
         return this.players.get((this.turn + 1) % 2);
     }  
+
+    public void setPlayerThrow(int position){
+        this.players.get(this.turn % 2).setThrow(position);
+    }
+
 
 
 
