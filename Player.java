@@ -30,7 +30,7 @@ public class Player {
     }
 
     public void setThrow(int t){
-        assert t >= 0 && t <= 12;
+        assert t > 0 && t <= 12;
         position = position + t;
     }
 

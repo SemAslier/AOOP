@@ -198,17 +198,16 @@ public class Model extends Observable {
         return this.randomgenerator.nextDouble();
     }
 
-    public void movePlayer(){
+    public void movePlayer(int dice){
         // move the player
         Player currentPlayer = this.getCurrentPlayer();
-        int dice = rollDice();
         int playerPosition = currentPlayer.getPosition();
         int newPosition = playerPosition + dice;
         if(newPosition > 39){
             newPosition = newPosition - 40;
         }
         currentPlayer.setPosition(newPosition);
-        System.out.println("Player " + currentPlayer.getName() + " rolled a " + dice + " and moved to " + newPosition);
+        // System.out.println("Player " + currentPlayer.getName() + " rolled a " + dice + " and moved to " + newPosition);
         // if(spaces.get(newPosition).getHotel() != null){
         //     calculateRent();
         // }

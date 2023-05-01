@@ -23,6 +23,8 @@ public class cli {
                 System.out.println("Select 1 for gamemode");
                 System.out.println("Select 2 to roll dice and play");
                 System.out.println("Select 3 to see the gamestate");
+
+
                 
                 
                 // voor hotel if can buy hotel etc.
@@ -31,6 +33,7 @@ public class cli {
                 }
                 choice = input.nextInt();
                 input.nextLine();
+                int dice = -1;
 
                 switch(choice){
                     case 0:
@@ -60,8 +63,18 @@ public class cli {
 
                     case 2:
                         System.out.println("Rolling dice");
-                        game.movePlayer();
+                        dice = game.rollDice();
+                    case 99:
+                            
+                        while (dice < 1 || dice >= 13){
+                            System.out.println("Choose 1-12 to roll");
+                            dice = input.nextInt();
+                        } 
+                        
+                        
+                        game.movePlayer(dice);
                         Player currentPlayer = game.getCurrentPlayer();
+                        Player passivePlayer = game.getPassivePlayer();
                         int currentSpace = currentPlayer.getPosition();
                         Hotel currentHotel = game.getSpace(currentSpace).getHotel();
                         Space hasHotel = game.getSpace(currentSpace);
@@ -119,7 +132,7 @@ public class cli {
                             } else {
                                 System.out.println("Invalid choice. Please try again.");
                             }
-                        } else if(currentHotel != null && currentHotel.getOwner() != currentPlayer) {
+                        } else if(currentHotel != null && currentHotel.getOwner() == passivePlayer) {
                             System.out.println("Player " + currentPlayer + " landed on " + currentHotel);
                             System.out.println("You have to pay " + game.calculateRent() + " to Player " + currentHotel.getOwner());
                             game.payRent();
@@ -133,6 +146,10 @@ public class cli {
                     case 3:
                         System.out.println(game);
                     break;
+
+                        
+
+                        
                              
                     
 

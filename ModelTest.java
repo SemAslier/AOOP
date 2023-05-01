@@ -3,7 +3,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.Random;
 
 
 
@@ -11,7 +10,7 @@ import java.util.Random;
 public class ModelTest {
 
 
-    @Test
+    @Test // Test game board initialization
     public void testGameBoardInitialization() {
         Model game = new Model(0);
 
@@ -45,7 +44,7 @@ public class ModelTest {
             }
     }
 
-    @Test
+    @Test // Test player creation mechanics
     public void testPlayerCreation() {
     Model game = new Model(0);
     List<Player> players = game.getPlayers();
@@ -60,7 +59,7 @@ public class ModelTest {
     assertEquals(0, bob.getPosition());
     }
 
-    @Test
+    @Test // Test dice rolling mechanics
     public void testDiceRolling() {
     Model game = new Model(0);
         for (int i = 0; i < 100; i++) {
@@ -69,7 +68,7 @@ public class ModelTest {
         }
     }
 
-    @Test
+    @Test // Test player movement mechanics
     public void testPlayerMovement() {
     Model game = new Model(0);
     Player player = game.getPlayers().get(0);
@@ -79,7 +78,7 @@ public class ModelTest {
     assertEquals(17, player.getPosition());
     }
 
-    @Test
+    @Test // Test pay rent mechanics
     public void testPayRent(){
         Model mod = new Model(0);
 
@@ -100,7 +99,7 @@ public class ModelTest {
 
     }
 
-    @Test
+    @Test // Test next turn mechanics
     public void testNextTurn() {
     Model game = new Model(0);
     Player alice = game.getPlayers().get(0);
@@ -117,7 +116,8 @@ public class ModelTest {
     Model mod = new Model(0);
     while(mod.isRunning() == false){
         System.out.println("Turn " + mod.getTurn() + " Player " + mod.getCurrentPlayer() + " is the current player ");
-        mod.movePlayer();
+        int dice = mod.rollDice();
+        mod.movePlayer(dice);
         Player currentPlayer = mod.getCurrentPlayer();
         int currentSpace = currentPlayer.getPosition();
         Hotel currentHotel = mod.getSpace(currentSpace).getHotel();

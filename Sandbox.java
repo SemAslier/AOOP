@@ -192,7 +192,8 @@ public class Sandbox implements Observer {
         System.out.println("Test game loop");
         while(mod.isRunning() == false){
             System.out.println("Turn " + mod.getTurn() + " Player " + mod.getCurrentPlayer() + " is the current player ");
-            mod.movePlayer();
+            int dice = mod.rollDice();
+            mod.movePlayer(dice);
             Player currentPlayer = mod.getCurrentPlayer();
             int currentSpace = currentPlayer.getPosition();
             Hotel currentHotel = mod.getSpace(currentSpace).getHotel();
