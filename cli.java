@@ -25,9 +25,6 @@ public class cli {
                 System.out.println("Select 3 to see the gamestate");
 
 
-                
-                
-                // voor hotel if can buy hotel etc.
                 if(game.getModeCheat()){
                     System.out.println("Select 99 to cheat");
                 }

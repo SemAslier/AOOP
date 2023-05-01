@@ -25,6 +25,15 @@ public class Hotel {
         return owner;
     }
 
+    public String getOwnerName(){
+        if (owner != null){
+            return owner.getName();
+        }
+        else{
+            return null;
+        }
+    }
+
     public int getStars(){
         return stars;
     }

@@ -1,12 +1,24 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardPanel extends JPanel {
     private Model model;
+    private List<String> messages;
 
     public BoardPanel(Model model) {
         this.model = model;
+        this.messages = new ArrayList<>();
         setPreferredSize(new Dimension(900, 956));
+    }
+
+    public void setMessage(String message) {
+        messages.add(message);
+        if (messages.size() > 5) {
+            messages.remove(0);
+        }
+        repaint();
     }
 
     @Override
@@ -45,8 +57,43 @@ public class BoardPanel extends JPanel {
             g.drawString(hotel.getName(), x + 10, y + 20);
             g.drawString("Value: " + hotel.getValue(), x + 10, y + 35);
             g.drawString("Stars: " + hotel.getStars(), x + 10, y + 50);
-            g.drawString("Owner: "+ hotel.getOwner(), x + 10, y + 65);
+
+            // Draw the owner name if an owner is present
+            String ownerName = hotel.getOwnerName();
+            if (ownerName != null){
+                g.drawString("Owner: " + hotel.getOwnerName(), x + 10, y + 65);
+            }
         }
+    }
+
+    // Draw the mode name
+    int modeX = 240;
+    int modeY = 100;
+    g.setColor(Color.BLACK);
+    g.drawString("Mode: " + model.getMode(), modeX, modeY);
+
+    // Draw the player status
+    int playerX = 360;
+    int playerY = 100;
+    g.setColor(Color.BLACK);
+    for (Player player : model.getPlayers()) {
+        g.drawString(player.getName() + ": has: " + player.getMoney() + " pounds", playerX, playerY);
+        playerY += 20;
+    }
+
+    // Draw the turn counter
+    int turncounterX = 120;
+    int turncounterY = 100;
+    g.setColor(Color.BLACK);
+    g.drawString("Turn: " + model.getTurn(), turncounterX, turncounterY);
+
+    // Draw the messages
+    int messageX = 120;
+    int messageY = 120;
+    g.setColor(Color.BLACK);
+    for (String message : messages) {
+        g.drawString(message, messageX, messageY);
+        messageY += 20;
     }
 }
 

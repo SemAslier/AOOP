@@ -104,11 +104,15 @@ public class Model extends Observable {
 
     public void setModeNormal(){
         this.mode = Mode.NORMAL;
+        setChanged();
         notifyObservers();
+
     }
 
     public void setModeCheat(){
         this.mode = Mode.CHEAT;
+        setChanged();
+        notifyObservers();
     }
 
     public boolean getModeCheat(){
@@ -179,18 +183,21 @@ public class Model extends Observable {
 	
     public void setTurn(int turn){
         this.turn = turn;
-        setChanged();
-        notifyObservers(turn);
     }
+    
 
     public void startNextTurn(){
         this.turn ++;
+        setChanged();
+        notifyObservers();
     }
 
 
     public int rollDice(){
         // roll the 12 sided dice
         dice = (int)(this.randomgenerator.nextDouble() * 12) + 1;
+        setChanged();
+        notifyObservers();
         return dice;
     }
 
@@ -212,12 +219,15 @@ public class Model extends Observable {
         //     calculateRent();
         // }
         
+        setChanged();
+        notifyObservers();
 
     }
 
     public void buyHotel(){
         // buy the hotel
         Player currentPlayer = this.getCurrentPlayer();
+        String currentPlayerName = currentPlayer.getName();
         int playerPosition = currentPlayer.getPosition();
         int hotelValue = spaces.get(playerPosition).getHotel().getValue();
         int playerMoney = currentPlayer.getMoney();
@@ -225,7 +235,9 @@ public class Model extends Observable {
         if(playerMoney >= hotelValue){
             currentPlayer.setMoney(playerMoney - hotelValue);
             hotel.setOwner(currentPlayer);
-            System.out.println("Player " + currentPlayer + " bought " + hotel);
+            System.out.println(currentPlayerName + " bought " + hotel);
+            setChanged();
+            notifyObservers();
 
         }
 
@@ -265,6 +277,8 @@ public class Model extends Observable {
             
             System.out.println("Hotel " + hotelName + " has been upgraded to " + newStars + " stars.");
             System.out.println("Player " + currentPlayer.getName() + " now has " + currentPlayer.getMoney() + " pounds.");
+            setChanged();
+            notifyObservers();
         }
 
 

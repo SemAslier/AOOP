@@ -17,6 +17,11 @@ public class View extends JFrame implements Observer {
     JButton payRentButton = new JButton("Pay Rent");
     JButton nextTurnButton = new JButton("Next Turn");
     JButton exitGameButton = new JButton("Exit Game");
+    JButton changeModeButton = new JButton("Change Mode");
+
+
+    JTextField diceInputField = new JTextField(4);
+    JButton cheatButton = new JButton("Cheat");
     
     public View(Model model) {
         this.model = model;
@@ -33,7 +38,7 @@ public class View extends JFrame implements Observer {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        BoardPanel boardPanel = new BoardPanel(model);
+        boardPanel = new BoardPanel(model);
         mainPanel.add(boardPanel, BorderLayout.CENTER);
 
         getContentPane().add(mainPanel);
@@ -47,11 +52,16 @@ public class View extends JFrame implements Observer {
         actionPanel.add(payRentButton);
         actionPanel.add(nextTurnButton);
         actionPanel.add(exitGameButton);
+        actionPanel.add(changeModeButton);
+        actionPanel.add(diceInputField);
+        actionPanel.add(cheatButton);
 
         upgradeHotelButton.setEnabled(false);
         buyHotelButton.setEnabled(false);
         nextTurnButton.setEnabled(false);
         payRentButton.setEnabled(false);
+        diceInputField.setEnabled(false);
+        cheatButton.setEnabled(false);
 
         mainPanel.add(actionPanel, BorderLayout.SOUTH);
 
@@ -60,7 +70,7 @@ public class View extends JFrame implements Observer {
 
 
     public void showMessage(String message) {
-        JOptionPane.showMessageDialog(this, message);
+        boardPanel.setMessage(message);
     }
 
     public JButton getRollDiceButton() {
@@ -87,6 +97,18 @@ public class View extends JFrame implements Observer {
         return exitGameButton;
     }
 
+    public JButton getChangeModeButton() {
+        return changeModeButton;
+    }
+
+    public JTextField getDiceInputField() {
+        return diceInputField;
+    }
+
+    public JButton getCheatButton() {
+        return cheatButton;
+    }
+
     public BoardPanel getBoardPanel() {
         return boardPanel;
     }
@@ -94,6 +116,6 @@ public class View extends JFrame implements Observer {
 
     @Override
     public void update(Observable observable, Object arg) {
-        // Update your view based on changes in the model
+        boardPanel.repaint();
     }
 }
