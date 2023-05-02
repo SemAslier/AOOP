@@ -7,8 +7,6 @@ import java.util.Observer;
 
 public class Sandbox implements Observer {
     public static void main(String[] args) {
-      
-
         Sandbox sb = new Sandbox();
         sb.tests();
         
@@ -22,13 +20,10 @@ public class Sandbox implements Observer {
     private void tests(){
         // init gamestate
         // build the model
-        // 
 
         System.out.println("Gamestate Tests");
         long seed = 0;
         Model mod = new Model(seed);
-
-
         
         // dice test
         System.out.println("Dice test");
@@ -72,9 +67,6 @@ public class Sandbox implements Observer {
 
         System.out.println("rent should be 0");
         System.out.println("Rent is: " + mod.calculateRent());
-
-
-
 
 
         // - test 2 guest owns hotel

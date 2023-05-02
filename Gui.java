@@ -5,6 +5,7 @@ public class Gui {
         SwingUtilities.invokeLater(() -> {
             Model model = new Model(0);
             View view = new View(model);
+            view.setResizable(false);
             Controller controller = new Controller(model, view);
 
             model.addObserver(view);

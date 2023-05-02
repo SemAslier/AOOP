@@ -51,6 +51,7 @@ public class BoardPanel extends JPanel {
 
         // Draw the rectangle for the space
         g.drawRect(x, y, spaceSize, spaceSize);
+        g.drawString("Position: "+ i, x + 10, y + 80 -2);
 
         // Draw the hotel name, value, and stars if a hotel is present
         if (hotel != null) {
@@ -86,6 +87,12 @@ public class BoardPanel extends JPanel {
     int currentPlayerY = 140;
     g.setColor(Color.BLACK);
     g.drawString("Current Player: " + model.getCurrentPlayer().getName(), currentPlayerX, currentPlayerY);
+
+    // Draw the current position
+    int currentSpaceX = 660;
+    int currentSpaceY = 160;
+    g.setColor(Color.BLACK);
+    g.drawString("Current Position: " + model.getCurrentPlayer().getPosition(), currentSpaceX, currentSpaceY);
 
     // Draw the turn counter
     int turncounterX = 120;

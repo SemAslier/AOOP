@@ -19,7 +19,6 @@ public class View extends JFrame implements Observer {
     JButton exitGameButton = new JButton("Exit Game");
     JButton changeModeButton = new JButton("Change Mode");
 
-
     JTextField diceInputField = new JTextField(4);
     JButton cheatButton = new JButton("Cheat");
     
@@ -111,6 +110,102 @@ public class View extends JFrame implements Observer {
 
     public BoardPanel getBoardPanel() {
         return boardPanel;
+    }
+
+    public void enableCheatButton(){
+        cheatButton.setEnabled(true);
+    }
+
+    public void disableCheatButton(){
+        cheatButton.setEnabled(false);
+    }
+
+    public void enableDiceInputField(){
+        diceInputField.setEnabled(true);
+    }
+
+    public void disableDiceInputField(){
+        diceInputField.setEnabled(false);
+    }
+
+    public void enableRollDiceButton(){
+        rollDiceButton.setEnabled(true);
+    }
+
+    public void disableRollDiceButton(){
+        rollDiceButton.setEnabled(false);
+    }
+
+    public void enableBuyHotelButton(){
+        buyHotelButton.setEnabled(true);
+    }
+
+    public void disableBuyHotelButton(){
+        buyHotelButton.setEnabled(false);
+    }
+
+    public void enableUpgradeHotelButton(){
+        upgradeHotelButton.setEnabled(true);
+    }
+
+    public void disableUpgradeHotelButton(){
+        upgradeHotelButton.setEnabled(false);
+    }
+
+    public void enablePayRentButton(){
+        payRentButton.setEnabled(true);
+    }
+
+    public void disablePayRentButton(){
+        payRentButton.setEnabled(false);
+    }
+
+    public void enableNextTurnButton(){
+        nextTurnButton.setEnabled(true);
+    }
+
+    public void disableNextTurnButton(){
+        nextTurnButton.setEnabled(false);
+    }
+
+    public void enableExitGameButton(){
+        exitGameButton.setEnabled(true);
+    }
+
+    public void disableExitGameButton(){
+        exitGameButton.setEnabled(false);
+    }
+
+    public void enableChangeModeButton(){
+        changeModeButton.setEnabled(true);
+    }
+
+    public void disableChangeModeButton(){
+        changeModeButton.setEnabled(false);
+    }
+
+    public void setModeGameOver(){
+        rollDiceButton.setEnabled(false);
+        buyHotelButton.setEnabled(false);
+        upgradeHotelButton.setEnabled(false);
+        payRentButton.setEnabled(false);
+        nextTurnButton.setEnabled(false);
+        exitGameButton.setEnabled(true);
+        changeModeButton.setEnabled(false);
+        diceInputField.setEnabled(false);
+        cheatButton.setEnabled(false);
+    }
+
+    public void setModeRollDice(){
+        rollDiceButton.setEnabled(true);
+        buyHotelButton.setEnabled(false);
+        upgradeHotelButton.setEnabled(false);
+        payRentButton.setEnabled(false);
+        nextTurnButton.setEnabled(false);
+        exitGameButton.setEnabled(true);
+        changeModeButton.setEnabled(true);
+        diceInputField.setEnabled(false);
+        cheatButton.setEnabled(false);
     }
 
 

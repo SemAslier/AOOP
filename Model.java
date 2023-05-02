@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Model extends Observable {
     public enum Mode{
-        NORMAL("normal"), CHEAT("cheat"), GAMEOVER("gameover");
+        NORMAL("normal"), CHEAT("cheat");
         private final String modeName;
         
         private Mode(String modeName){
@@ -52,16 +52,16 @@ public class Model extends Observable {
     private ArrayList<Hotel> hotels;
     private Mode mode;
     private int dice;
-    private int rent;
     private Random randomgenerator;
-    private int currentPlayerIndex;
 
-
-    
+    // Class Invariants:
+    // 1. The number of players should always be 2.
+    // 2. The number of spaces on the board should always be 40.
+    // 3. There should be 24 hotels in total.
+    // 4. The turn should never be less than 1.
 
     public Model(long seed){
         this.randomgenerator = new Random(seed);
-
         // Init game standard
         this.setModeNormal();
         this.turn = 1;
@@ -108,20 +108,21 @@ public class Model extends Observable {
         setChanged();
         notifyObservers();
 
+        // Postcondition: The mode should be set to NORMAL.
+        assert this.mode == Mode.NORMAL;
     }
 
     public void setModeCheat(){
         this.mode = Mode.CHEAT;
         setChanged();
         notifyObservers();
+
+        // Postcondition: The mode should be set to CHEAT.
+        assert this.mode == Mode.CHEAT;
     }
 
     public boolean getModeCheat(){
         return this.mode == Mode.CHEAT;
-    }
-
-    public void setModeGameOver(){
-        this.mode = Mode.GAMEOVER;
     }
 
     public int getTurn(){
@@ -171,9 +172,6 @@ public class Model extends Observable {
         this.players.get(this.turn % 2).setThrow(position);
     }
 
-
-
-
     public ArrayList<Hotel> getHotels(){
         return hotels;
     }
@@ -185,14 +183,15 @@ public class Model extends Observable {
     public void setTurn(int turn){
         this.turn = turn;
     }
-    
 
     public void startNextTurn(){
         this.turn ++;
         setChanged();
         notifyObservers();
-    }
 
+        // Postcondition: The turn should be incremented by 1.
+        assert this.turn > 0;
+    }
 
     public int rollDice(){
         // roll the 12 sided dice
@@ -208,21 +207,20 @@ public class Model extends Observable {
 
     public void movePlayer(int dice){
         // move the player
+        // Precondition: dice should be between 1 and 12.
+        assert dice >= 1 && dice <= 12;
         Player currentPlayer = this.getCurrentPlayer();
         int playerPosition = currentPlayer.getPosition();
         int newPosition = playerPosition + dice;
         if(newPosition > 39){
             newPosition = newPosition - 40;
         }
-        currentPlayer.setPosition(newPosition);
-        // System.out.println("Player " + currentPlayer.getName() + " rolled a " + dice + " and moved to " + newPosition);
-        // if(spaces.get(newPosition).getHotel() != null){
-        //     calculateRent();
-        // }
-        
+        currentPlayer.setPosition(newPosition); 
         setChanged();
         notifyObservers();
 
+        // Postcondition: The current player's position should be updated.
+        assert currentPlayer.getPosition() == newPosition;
     }
 
     public void buyHotel(){
@@ -239,20 +237,13 @@ public class Model extends Observable {
             System.out.println(currentPlayerName + " bought " + hotel);
             setChanged();
             notifyObservers();
-
         }
 
+        // Postcondition: The hotel's owner should be the current player if they had enough money.
     }
 
     public void upgradeHotel(){
-        // upgrade the hotel If a player lands on a hotel that they own or have just purchased a hotel, 
-        // they should be given the opportunity to increase its star rating if they can afford it. 
-        // A hotel has a star-rating of zero when purchased (so the overnight fee of a guest is £0). 
-        // The cost of increasing the star rating by one is 50% of the purchase price. 
-        // The player can increase the star rating as many times as they like on a turn but the maximum star rating is 
-        // five. 
-
-
+        // upgrade the hotel
         Player currentPlayer = this.getCurrentPlayer();
         int playerPosition = currentPlayer.getPosition();
         int hotelStars = spaces.get(playerPosition).getHotel().getStars();
@@ -281,29 +272,9 @@ public class Model extends Observable {
             setChanged();
             notifyObservers();
         }
-
-
-
-        
-        
-
     }
 
     public int calculateRent(){
-        /*
-         * If the player lands on a hotel owned by the other player, an overnight fee should be deducted from the 
-         * first player (guest) and given to the second player (owner). The overnight fee for a hotel is 10% of the 
-         * purchase price multiplied by the square of the star-rating. However, the fee is doubled if the owner owns 
-         * both of the other two hotels in the letter group eg A3 and A2 as well as A1 and is halved if the guest 
-         * owns either or both of the other two hotels in the letter group
-         * 
-         * - Check the owner
-         * - Get purchase price -> 0.1 * purchase price
-         * - Get star rating -> stars^2
-         * - Check if the owner own all hotels -> double the rent
-         * - Check if the guest owns any hotels in the same group -> halve the rent
-         */
-
         // calculate the rent
         Player guest = this.getCurrentPlayer();
         Player owner = this.getPassivePlayer(); 
@@ -314,21 +285,15 @@ public class Model extends Observable {
         String hotelGroup = hotel.getGroup();
         int baseRent = (int) (0.1 * hotelValue * Math.pow(hotelStars, 2));
 
-
-
         //check the owner
         if(hotel.getOwner() == null){
-            // System.out.println("owner is null");
             return 0;
         }
 
         if(hotel.getOwner() == guest){
-            // System.out.println("owner is guest");
             return 0;
 
         }
-
-
 
         // check if the owner owns all hotels in the group
         boolean allGroupHotelsOwned = true;
@@ -339,9 +304,7 @@ public class Model extends Observable {
             }
         }
 
-
         if(allGroupHotelsOwned){
-            // System.out.println("owner has all hotels in group");
             return baseRent * 2;
         }
 
@@ -354,11 +317,8 @@ public class Model extends Observable {
             }
         }
         if(hasOtherGroupHotelOwned){
-            // System.out.println("guest own hotel in group");
             return baseRent / 2;
         }
-
-        // System.out.println("owner owns only this hotel");
         return baseRent;
     }
 
@@ -367,7 +327,6 @@ public class Model extends Observable {
         // pay the rent
         Player guest = this.getCurrentPlayer();
         Player owner = this.getPassivePlayer();
-        int playerPosition = guest.getPosition();
         int rent = calculateRent();
         int playerMoney = guest.getMoney();
         int ownerMoney = owner.getMoney();
@@ -389,15 +348,6 @@ public class Model extends Observable {
         
     }
 
-
-    public void checkGameOver(){
-        // check if the game is over
-        if(players.get(turn).getMoney() <= 0){
-            setModeGameOver();
-        }
-
-    }
-
     public boolean isRunning(){
         return this.getModeName() == "gameover";
 
@@ -408,13 +358,10 @@ public class Model extends Observable {
         Player winner = this.getPassivePlayer();
         System.out.println("Game Over");
         System.out.println("The winner is " + winner.getName());
-        setModeGameOver();
-        //System.exit(0);
-        //end program
+        System.exit(0);
 
+        // Postcondition: The game should be terminated after announcing the winner.
     }
-
-    
     
     public String toString(){
         String out = "Mode: " + this.mode + "\n" + "Turn: " + this.turn + "\n";
@@ -429,13 +376,19 @@ public class Model extends Observable {
     }
 
     // Setup test scenarios
-
+    /*
+     * This sets the turn to 0 and the current player gets moved to postition 3
+     */
     public void setupBuyHotelScenario() {
         setTurn(0);
         Player currentPlayer = getCurrentPlayer();
         currentPlayer.setPosition(3);
     }
     
+    /*
+     * This sets the turn to 0, moves the current player to position 3 
+     * and sets the current player as owner of the hotel with index 1
+     */
     public void setupUpgradeHotelScenario() {
         setTurn(0);
         Player currentPlayer = getCurrentPlayer();
@@ -444,6 +397,12 @@ public class Model extends Observable {
         testHotel.setOwner(currentPlayer);
     }
     
+    /*
+     * This sets the turn to 0
+     * sets the passive player as owner of the hotel with index 1
+     * and moves the current player to position 3
+     */
+
     public void setupPayRentScenario() {
         setTurn(0);
         Player currentPlayer = getCurrentPlayer();
@@ -454,6 +413,12 @@ public class Model extends Observable {
         currentPlayer.setPosition(3);
     }
 
+    /*
+     * This sets the turn to 0
+     * sets the passive player as owner of the hotel with index 1
+     * sets the stars of the hotel to 1
+     * and sets the current player's money to 0
+     */
     public void setupBankruptScenario() {
         setTurn(0);
         Player currentPlayer = getCurrentPlayer();
@@ -465,6 +430,12 @@ public class Model extends Observable {
         currentPlayer.setMoney(0);
     }
 
+    /*
+     * This sets the turn to 0
+     * sets the passive player as owner of the hotels with index 0, 1 and 2
+     * sets the stars of the hotels to 1
+     * and moves the current player to position 3
+     */
     public void setupDoubleRentScenario() {
         setTurn(0);
         Player currentPlayer = getCurrentPlayer();
@@ -483,6 +454,12 @@ public class Model extends Observable {
         currentPlayer.setPosition(3);
     }
 
+    /*
+     * This sets the turn to 0
+     * sets the current player as owner of the hotel with index 1
+     * sets the stars of the hotels to 0
+     * and moves the current player to position 3
+     */
     public void setupUpgradeToFiveStarsScenario() {
         setTurn(0);
         Player currentPlayer = getCurrentPlayer();

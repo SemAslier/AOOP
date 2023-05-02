@@ -28,7 +28,6 @@ public class Controller {
         view.changeModeButton.addActionListener(e -> changeMode());
         view.cheatButton.addActionListener(e -> cheatMove());
 
-
     }
 
     public void rollDice(){
@@ -42,8 +41,8 @@ public class Controller {
             if (dice >= 1 && dice <= 12) {
                 dice = Integer.parseInt(view.getDiceInputField().getText());
                 handlePlayerMove(dice);
-                view.cheatButton.setEnabled(false);
-                view.diceInputField.setEnabled(false);
+                view.disableCheatButton();
+                view.disableDiceInputField();
                 model.setModeNormal();
             } else {
                 view.showMessage("Please enter a valid number between 1 and 12.");
@@ -63,33 +62,42 @@ public class Controller {
         Hotel currentHotel = model.getSpace(currentSpace).getHotel();
         Space hasHotel = model.getSpace(currentSpace);
 
-        view.rollDiceButton.setEnabled(false);
-        view.changeModeButton.setEnabled(false);
-        view.cheatButton.setEnabled(false);
-        view.diceInputField.setEnabled(false);
-        view.nextTurnButton.setEnabled(true);
+        view.disableRollDiceButton();
+        view.disableChangeModeButton();
+        view.disableCheatButton();
+        view.disableDiceInputField();
+        view.disableNextTurnButton();
         view.showMessage(currentPlayerName + " you rolled a " + dice);
 
         if (currentHotel == null){
             view.showMessage((currentPlayerName + " landed on " + hasHotel));
+            view.enableNextTurnButton();
         }
 
         if (currentHotel != null && currentHotel.getOwner() == null) {
             view.showMessage(currentPlayerName + " landed on " + currentHotel);
             view.showMessage("You can buy the hotel or go next turn");
-            view.buyHotelButton.setEnabled(true);
+            view.enableBuyHotelButton();
+            view.enableNextTurnButton();
         }
         if (currentHotel != null && currentHotel.getOwner() == currentPlayer) {
             view.showMessage(currentPlayerName + " landed on " + currentHotel);
             view.showMessage("You can upgrade the hotel or go next turn");
-            view.upgradeHotelButton.setEnabled(true);
+            view.disableUpgradeHotelButton();
         }
         if (currentHotel != null && currentHotel.getOwner() == passivePlayer) {
             view.showMessage(currentPlayerName + " landed on " + currentHotel);
             int rent = model.calculateRent();
             view.showMessage("You must pay " + rent + " rent");
-            view.payRentButton.setEnabled(true);
-            view.nextTurnButton.setEnabled(false);
+            if(currentPlayer.getMoney() < rent){
+                view.showMessage("You don't have enough money to pay rent. You lose!");
+                view.showMessage("Game over!");
+                view.showMessage("Player " + passivePlayer.getName() + " wins!");
+                view.showMessage("Thanks for playing!");
+                view.setModeGameOver();
+            } else
+            view.enablePayRentButton();
+            view.disableNextTurnButton();
         }
     }
 
@@ -97,9 +105,8 @@ public class Controller {
     public void buyHotel() {
         model.buyHotel();
         view.showMessage("Hotel purchased!");
-        view.buyHotelButton.setEnabled(false);
-        view.upgradeHotelButton.setEnabled(true);
-
+        view.disableBuyHotelButton();
+        view.enableUpgradeHotelButton();
     }
 
     private void upgradeHotel() {
@@ -114,7 +121,7 @@ public class Controller {
 
         } else{
             view.showMessage("This hotel has reached maximum stars");
-            view.getUpgradeHotelButton().setEnabled(false);
+            view.disableUpgradeHotelButton();
         }
 
     }
@@ -122,13 +129,13 @@ public class Controller {
     private void changeMode() {
         if (model.getModeName() == "normal"){
             model.setModeCheat();
-            view.diceInputField.setEnabled(true);
-            view.cheatButton.setEnabled(true);
+            view.enableDiceInputField();
+            view.enableCheatButton();
             view.showMessage("Cheat mode activated!");
         } else{
             model.setModeNormal();
-            view.diceInputField.setEnabled(false);
-            view.cheatButton.setEnabled(false);
+            view.enableDiceInputField();
+            view.disableCheatButton();
             view.showMessage("Normal mode activated!");
         }
     }
@@ -137,19 +144,13 @@ public class Controller {
     private void payRent() {
         model.payRent();
         view.showMessage("Rent paid!");
-        view.payRentButton.setEnabled(false);
-        view.nextTurnButton.setEnabled(true);
+        view.disablePayRentButton();
+        view.enableNextTurnButton();
     }
 
     private void nextTurn() {
         model.startNextTurn();
-        view.rollDiceButton.setEnabled(true);
-        view.buyHotelButton.setEnabled(false);
-        view.upgradeHotelButton.setEnabled(false);
-        view.nextTurnButton.setEnabled(false);
-        view.changeModeButton.setEnabled(true);
-        view.cheatButton.setEnabled(false);
-        view.diceInputField.setEnabled(false);
+        view.setModeRollDice();
     }
 
     private void exitGame() {

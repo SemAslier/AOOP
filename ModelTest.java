@@ -127,7 +127,6 @@ public class ModelTest {
         } else if(currentHotel != null && currentHotel.getOwner() == currentPlayer) {
             if(mod.getRandomDouble() >= 0.3){
             mod.upgradeHotel();
-            //System.out.println("Player " + currentPlayer + " upgraded " + currentHotel);
             mod.startNextTurn();
             } else{
                 mod.startNextTurn();
@@ -250,6 +249,7 @@ public class ModelTest {
     }
 
     // Scenario 6: Test when a player lands on their own hotel and upgrades the hotel to 5 stars
+    // and then tries to upgrade it again
     @Test
     public void testUpgradeToFiveStars() {
         Model game = new Model(0);
