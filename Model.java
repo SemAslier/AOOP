@@ -54,6 +54,7 @@ public class Model extends Observable {
     private int dice;
     private int rent;
     private Random randomgenerator;
+    private int currentPlayerIndex;
 
 
     
@@ -63,14 +64,14 @@ public class Model extends Observable {
 
         // Init game standard
         this.setModeNormal();
-        this.turn = 0;
+        this.turn = 1;
 
         // init players
         this.players = new ArrayList<Player>();
         Player alice = new Player(2000);
         Player bob = new Player(2000);
-        alice.setName("alice");
-        bob.setName("bob");
+        alice.setName("Alice");
+        bob.setName("Bob");
         this.players.add(alice);
         this.players.add(bob);
 
@@ -388,17 +389,6 @@ public class Model extends Observable {
         
     }
 
-    public void nextTurn(){
-        // next turn
-
-
-
-
-
-        
-        
-
-    }
 
     public void checkGameOver(){
         // check if the game is over
@@ -422,12 +412,9 @@ public class Model extends Observable {
         //System.exit(0);
         //end program
 
-
-        
     }
 
     
-	
     
     public String toString(){
         String out = "Mode: " + this.mode + "\n" + "Turn: " + this.turn + "\n";
@@ -439,9 +426,70 @@ public class Model extends Observable {
         }
         return out;
 
-        
-        // this.spaces = spaces;
-        // this.players = players;
-        // this.hotels = hotels;
     }
+
+    // Setup test scenarios
+
+    public void setupBuyHotelScenario() {
+        setTurn(0);
+        Player currentPlayer = getCurrentPlayer();
+        currentPlayer.setPosition(3);
+    }
+    
+    public void setupUpgradeHotelScenario() {
+        setTurn(0);
+        Player currentPlayer = getCurrentPlayer();
+        currentPlayer.setPosition(3);
+        Hotel testHotel = getHotels().get(1);
+        testHotel.setOwner(currentPlayer);
+    }
+    
+    public void setupPayRentScenario() {
+        setTurn(0);
+        Player currentPlayer = getCurrentPlayer();
+        Player passivePlayer = getPassivePlayer();
+        Hotel testHotel = getHotels().get(1);
+        testHotel.setOwner(passivePlayer);
+        testHotel.setStars(1);
+        currentPlayer.setPosition(3);
+    }
+
+    public void setupBankruptScenario() {
+        setTurn(0);
+        Player currentPlayer = getCurrentPlayer();
+        Player passivePlayer = getPassivePlayer();
+        Hotel testHotel = getHotels().get(1);
+        testHotel.setOwner(passivePlayer);
+        testHotel.setStars(1);
+        currentPlayer.setPosition(3);
+        currentPlayer.setMoney(0);
+    }
+
+    public void setupDoubleRentScenario() {
+        setTurn(0);
+        Player currentPlayer = getCurrentPlayer();
+        Player passivePlayer = getPassivePlayer();
+
+        Hotel testHotel = getHotels().get(0);
+        testHotel.setOwner(passivePlayer);
+        testHotel.setStars(1);
+        Hotel testHotel2 = getHotels().get(1);
+        testHotel2.setOwner(passivePlayer);
+        testHotel2.setStars(1);
+        Hotel testHotel3 = getHotels().get(2);
+        testHotel3.setOwner(passivePlayer);
+        testHotel3.setStars(1);
+
+        currentPlayer.setPosition(3);
+    }
+
+    public void setupUpgradeToFiveStarsScenario() {
+        setTurn(0);
+        Player currentPlayer = getCurrentPlayer();
+        Hotel testHotel = getHotels().get(1);
+        testHotel.setOwner(currentPlayer);
+        testHotel.setStars(0);
+        currentPlayer.setPosition(3);
+    }
+    
 }

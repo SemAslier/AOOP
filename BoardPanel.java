@@ -73,13 +73,19 @@ public class BoardPanel extends JPanel {
     g.drawString("Mode: " + model.getMode(), modeX, modeY);
 
     // Draw the player status
-    int playerX = 360;
+    int playerX = 660;
     int playerY = 100;
     g.setColor(Color.BLACK);
     for (Player player : model.getPlayers()) {
         g.drawString(player.getName() + ": has: " + player.getMoney() + " pounds", playerX, playerY);
         playerY += 20;
     }
+
+    // Draw the current player
+    int currentPlayerX = 660;
+    int currentPlayerY = 140;
+    g.setColor(Color.BLACK);
+    g.drawString("Current Player: " + model.getCurrentPlayer().getName(), currentPlayerX, currentPlayerY);
 
     // Draw the turn counter
     int turncounterX = 120;

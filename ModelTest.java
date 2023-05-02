@@ -50,11 +50,11 @@ public class ModelTest {
     List<Player> players = game.getPlayers();
     assertEquals(2, players.size());
     Player alice = players.get(0);
-    assertEquals("alice", alice.getName());
+    assertEquals("Alice", alice.getName());
     assertEquals(2000, alice.getMoney());
     assertEquals(0, alice.getPosition());
     Player bob = players.get(1);
-    assertEquals("bob", bob.getName());
+    assertEquals("Bob", bob.getName());
     assertEquals(2000, bob.getMoney());
     assertEquals(0, bob.getPosition());
     }
@@ -71,39 +71,18 @@ public class ModelTest {
     @Test // Test player movement mechanics
     public void testPlayerMovement() {
     Model game = new Model(0);
-    Player player = game.getPlayers().get(0);
+    Player player = game.getCurrentPlayer();
     game.setPlayerThrow(5);
     assertEquals(5, player.getPosition());
     game.setPlayerThrow(12);
     assertEquals(17, player.getPosition());
     }
 
-    @Test // Test pay rent mechanics
-    public void testPayRent(){
-        Model mod = new Model(0);
-
-        Player testGuest6 = mod.getCurrentPlayer();
-        Player testOwner6 = mod.getPassivePlayer();
-
-        Hotel testHotel10 = mod.getHotels().get(1);
-
-        testHotel10.setOwner(testOwner6);
-        testHotel10.setStars(1);
-
-        testGuest6.setPosition(3);
-        assertEquals(mod.calculateRent(), 5);
-
-        assertEquals(testGuest6.getMoney(), 2000);
-        mod.payRent();
-        assertEquals(testGuest6.getMoney(), 1995);
-
-    }
-
     @Test // Test next turn mechanics
     public void testNextTurn() {
     Model game = new Model(0);
-    Player alice = game.getPlayers().get(0);
-    Player bob = game.getPlayers().get(1);
+    Player alice = game.getCurrentPlayer();
+    Player bob = game.getPassivePlayer();
     assertEquals(alice, game.getCurrentPlayer());
     game.startNextTurn();
     assertEquals(bob, game.getCurrentPlayer());
@@ -168,12 +147,144 @@ public class ModelTest {
         
     }
 
+    // Scenario 1: Test when a player lands on an unowned hotel and buys it
+    @Test
+    public void testBuyHotel() {
+        Model game = new Model(0);
+        game.setupBuyHotelScenario();
 
+        Player currentPlayer = game.getCurrentPlayer();
+        Hotel testHotel = game.getHotels().get(1);
 
-    
+        // Check if the hotel is unowned
+        assertNull(testHotel.getOwner());
 
+        // Buy Hotel
+        game.buyHotel();
 
+        assertEquals(currentPlayer, testHotel.getOwner());
+        assertEquals(0, testHotel.getStars());
+        assertEquals(2000 - testHotel.getValue(), currentPlayer.getMoney());
+    }
 
+    // Scenario 2: Test when a player lands on an owned hotel and upgrades it
+    @Test
+    public void testUpgradeHotel() {
+        Model game = new Model(0);
+        game.setupUpgradeHotelScenario();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        Hotel testHotel = game.getHotels().get(1);
+
+        // Check if the hotel is owned by the current player
+        assertEquals(currentPlayer, testHotel.getOwner());
+
+        // Upgrade Hotel
+        game.upgradeHotel();
+
+        assertEquals(1, testHotel.getStars());
+        assertEquals(2000 - (int)(0.5 * testHotel.getValue()), currentPlayer.getMoney());
+    }
+
+    // Scenario 3: Test when a player lands on a hotel owned by another player and pays rent
+    @Test
+    public void testPayRent() {
+        Model game = new Model(0);
+        game.setupPayRentScenario();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        Player passivePlayer = game.getPassivePlayer();
+        Hotel testHotel = game.getHotels().get(1);
+
+        // Check if the hotel is owned by passive player
+        assertEquals(passivePlayer, testHotel.getOwner());
+
+        // Pay rent
+        game.payRent();
+
+        assertEquals(2000 - game.calculateRent(), currentPlayer.getMoney());
+        assertEquals(2000 + game.calculateRent(), passivePlayer.getMoney());
+    }
+
+    // Scenario 4: Test when a player lands on a hotel owned by another player and goes bankrupt
+    @Test
+    public void testBankrupt() {
+        Model game = new Model(0);
+        game.setupBankruptScenario();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        Player passivePlayer = game.getPassivePlayer();
+        Hotel testHotel = game.getHotels().get(1);
+
+        // Check if the hotel is owned by passive player
+        assertEquals(passivePlayer, testHotel.getOwner());
+
+        // Pay rent
+        game.payRent();
+
+        assertEquals(0, currentPlayer.getMoney());
+        assertEquals(2000, passivePlayer.getMoney());
+    }
+
+    // Scenario 5: Test when a player lands on a hotel owned by another player and the rent gets doubled (because the owner owns the whole group)
+    @Test
+    public void testDoubleRent() {
+        Model game = new Model(0);
+        game.setupDoubleRentScenario();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        Player passivePlayer = game.getPassivePlayer();
+        Hotel testHotel = game.getHotels().get(1);
+        int baseRent = (int) (0.1 * testHotel.getValue());
+
+        // Check if the hotel is owned by passive player
+        assertEquals(passivePlayer, testHotel.getOwner());
+
+        // Pay rent
+        game.payRent();
+
+        assertEquals(game.calculateRent(), baseRent * 2);
+
+        assertEquals(2000 - game.calculateRent(), currentPlayer.getMoney());
+        assertEquals(2000 + game.calculateRent(), passivePlayer.getMoney());
+    }
+
+    // Scenario 6: Test when a player lands on their own hotel and upgrades the hotel to 5 stars
+    @Test
+    public void testUpgradeToFiveStars() {
+        Model game = new Model(0);
+        game.setupUpgradeToFiveStarsScenario();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        Hotel testHotel = game.getHotels().get(1);
+
+        // Check if the hotel is owned by the current player
+        assertEquals(currentPlayer, testHotel.getOwner());
+
+        // Upgrade Hotel to 1 star
+        game.upgradeHotel();
+        assertEquals(1, testHotel.getStars());
+
+        // Upgrade Hotel to 2 stars
+        game.upgradeHotel();
+        assertEquals(2, testHotel.getStars());
+
+        // Upgrade Hotel to 3 stars
+        game.upgradeHotel();
+        assertEquals(3, testHotel.getStars());
+
+        // Upgrade Hotel to 4 stars
+        game.upgradeHotel();
+        assertEquals(4, testHotel.getStars());
+
+        // Upgrade Hotel to 5 stars
+        game.upgradeHotel();
+        assertEquals(5, testHotel.getStars());
+
+        // Try to upgrade the hotel to 6 stars
+        game.upgradeHotel();
+        assertEquals(5, testHotel.getStars());
+    }
 
 }
 

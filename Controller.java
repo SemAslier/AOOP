@@ -148,8 +148,8 @@ public class Controller {
         view.upgradeHotelButton.setEnabled(false);
         view.nextTurnButton.setEnabled(false);
         view.changeModeButton.setEnabled(true);
-        view.cheatButton.setEnabled(true);
-        view.diceInputField.setEnabled(true);
+        view.cheatButton.setEnabled(false);
+        view.diceInputField.setEnabled(false);
     }
 
     private void exitGame() {
