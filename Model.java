@@ -51,8 +51,7 @@ public class Model extends Observable {
     private ArrayList<Player> players;
     private ArrayList<Hotel> hotels;
     private Mode mode;
-    private int dice;
-    private Random randomgenerator;
+    private Random randomGenerator;
 
     // Class Invariants:
     // 1. The number of players should always be 2.
@@ -61,7 +60,7 @@ public class Model extends Observable {
     // 4. The turn should never be less than 1.
 
     public Model(long seed){
-        this.randomgenerator = new Random(seed);
+        this.randomGenerator = new Random(seed);
         // Init game standard
         this.setModeNormal();
         this.turn = 1;
@@ -102,6 +101,7 @@ public class Model extends Observable {
     public String getModeName(){
         return mode.getModeName();
     }
+
 
     public void setModeNormal(){
         this.mode = Mode.NORMAL;
@@ -195,14 +195,14 @@ public class Model extends Observable {
 
     public int rollDice(){
         // roll the 12 sided dice
-        dice = (int)(this.randomgenerator.nextDouble() * 12) + 1;
+        int dice = (int)(this.randomGenerator.nextDouble() * 12) + 1;
         setChanged();
         notifyObservers();
         return dice;
     }
 
     public double getRandomDouble(){
-        return this.randomgenerator.nextDouble();
+        return this.randomGenerator.nextDouble();
     }
 
     public void movePlayer(int dice){
@@ -244,6 +244,8 @@ public class Model extends Observable {
 
     public void upgradeHotel(){
         // upgrade the hotel
+        // Precondition: The current player must have enough money
+        // Precondition: The hotel can't have 5 stars already
         Player currentPlayer = this.getCurrentPlayer();
         int playerPosition = currentPlayer.getPosition();
         int hotelStars = spaces.get(playerPosition).getHotel().getStars();
@@ -345,7 +347,7 @@ public class Model extends Observable {
         }else{
             endGame();
         }
-        
+        // Postcondition: The players' money has been updated
     }
 
     public boolean isRunning(){

@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
-public class cli {
+public class Cli {
     public static void main(String[] args){
-        cli game = new cli();
+        Cli game = new Cli();
         game.run();
     }
 
